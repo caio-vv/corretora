@@ -4,6 +4,7 @@ const corretora = require("./corretora.js");
 const cliente = require("./cliente.js");
 const corretor = require("./corretor.js");
 const imovel = require("./imovel.js")
+const venda = require("./venda.js")
 
 const menuPrincipal = () => {
   console.log(`
@@ -17,6 +18,8 @@ const menuPrincipal = () => {
                   1 - CORRETORA
                   2 - CLIENTE
                   3 - CORRETOR
+                  4 - IMOVEL
+                  5 - VENDA
                   0 - SAIR
                   `);
 
@@ -34,6 +37,13 @@ const menuPrincipal = () => {
       case 3:
         menuCorretor();
         break;
+
+        case 4: 
+        menuImovel()
+        break;
+
+        case 5:
+            menuVENDA()
 
       case 0:
         process.exit();
@@ -53,7 +63,6 @@ const menuCliente = () => {
                 2 - LISTAR CLIENTES
                 3 - ATUALIZAR CLIENTE
                 4 - EXCLUIR CLIENTE
-                5 - CADASTRAR IMOVEL
                 0 - SAIR
                 `);
 
@@ -71,9 +80,6 @@ const menuCliente = () => {
         break;
       case 4:
         cliente.destroy();
-        break;
-        case 5:
-            menuImovel()
         break;
 
       case 0:
@@ -192,5 +198,11 @@ const menuImovel = () => {
       }
     }
   };
+  
+  const menuVENDA = () => {
+    console.log("cadastre a venda")
 
+    venda.modelo()
+  }
+  
 menuPrincipal();
