@@ -1,75 +1,99 @@
-const prompt = require('prompt-sync')()
+const prompt = require("prompt-sync")();
 
-let residencias = []
+const corretora = require("./corretora.js");
 
+const db = [];
 
-const modelo = (id) => {
-    const pegar_id_corretora = prompt("qual o ID da corretora: ")
-    const bairro = prompt("qual bairro: ")
-    const rua = prompt("qual rua")
-    const numero = prompt("qual numero")
+let proxId = 1;
 
-    if (bairro != "" && rua != "" && numero != ""){
-       
-        let residencia
-        if (id != undefined){
-        residencia = {
-        id,
-        bairro, 
-        rua, 
-        numero, 
-        
-        }
+const model = (id = proxId++) => {
+  const numero = prompt("Numero: ");
+  const rua = prompt("rua: ");
+  const bairro = prompt("bairro: ");
+
+  let id_corretora = 0
+  if(corretora.index()) {
+      id_corretora = parseInt(prompt("ID da corretora: "));
+  } else {
+      console.log("Cadastre uma corretora para inserir um imovel");
+  }
+
+  if (
+    numero != "" && rua != "" && bairro != "" &&
+    corretora.show(id_corretora)
+  ) {
+    return {
+      id,
+      numero,
+      rua,
+      bairro,
+      id_corretora
+    };
+  }
+
+  console.log("Dados inválidos");
+};
+
+const store = () => {
+  const novo = model();
+
+  if (novo) {
+    db.push(novo);
+
+    console.log("Registro concluido com sucesso!");
+  }
+};
+
+const index = () => {
+  if (db.length == 0) {
+    console.log("Nenhum registro encontrado.");
+    return false;
+  }
+
+  db.forEach((el) => console.log(el));
+  return true;
+};
+
+const show = (id) => db.find((el) => el.id == id);
+
+const update = () => {
+  if (index()) {
+    const id = parseInt(prompt("ID: "));
+
+    const indice = db.findIndex((el) => el.id == id);
+
+    if (indice != -1) {
+      const novo = model(id);
+
+      if (novo) {
+        db[indice] = novo;
+        console.log("Registro atualizado com sucesso.");
+      }
     } else {
-        residencia = {
-            id: pegar_id_corretora,
-            bairro, 
-            rua, 
-            numero, 
-            
-            }
-            
+      console.log("Registro não encontrado");
     }
-    return residencia
-    }
-}
-const adicionaResidencia = () => {
-    const residencia = modelo()
-    if (residencia != undefined){
-        residencias.push(residencia)
-    }
-    console.log(residencias)
-}
-const removerResidencias = () => {
-    listarResidencias()
-    const pegarID = prompt("qual id voce deseja remover")
+  }
+};
 
-    residencias.forEach((residencia, indice) => {
-        if (pegarID == residencia.id){
-            const confrimarRemocao = prompt("deseja mesmo remover? s para sim ")
-            if (confrimarRemocao == "s"){
-                residencias.splice(indice, 1)
-                console.log("residencia removida")
-            }
+const destroy = () => {
+    if(index()) {
+        const id = parseInt(prompt("ID: "));
+
+        const indice = db.findIndex(el => el.id == id);
+
+        if(indice != -1) {
+            db.splice(indice, 1);
+            console.log("Registro excluído com sucesso");
+        } else {
+            console.log("Registro não encontrado")
         }
-    });
+    }
 }
-function listarResidencias() {
-  residencias.forEach((residencia) => {
-    console.log(
-      `ID: ${residencia.id}, Bairro: ${residencia.bairro}, Rua: ${residencia.rua}, Número: ${residencia.numero}`
-    );
-    
-  });
+
+module.exports = {
+    store,
+    index,
+    show,
+    update,
+    destroy
 }
-const atualizarResidencia = () =>{
-    listarResidencias()
-    const pegarID = prompt("qual id voce deseja atualizar")
-    const novo = modelo(pegarID)
-    residencias.forEach((residencia, indice) => {
-        if (pegarID == residencia.id){
-            residencias[indice] = novo
-        }
-    })
-}
-module.exports = {listarResidencias, adicionaResidencia, removerResidencias, atualizarResidencia};
