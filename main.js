@@ -200,9 +200,39 @@ const menuImovel = () => {
   };
   
   const menuVENDA = () => {
-    console.log("cadastre a venda")
-
-    venda.modelo()
+    console.log("GERENCIAMENTO DE VENDA");
+    while (true) {
+      console.log(`
+                  1 - CADASTRAR VENDA
+                  2 - LISTAR VENDA
+                  3 - ATUALIZAR VENDA
+                  4 - EXCLUIR VENDA
+                  0 - SAIR
+                  `);
+  
+      const opcaoServico = parseInt(prompt(": "));
+  
+      switch (opcaoServico) {
+        case 1:
+          venda.store();
+          break;
+        case 2:
+            venda.index();
+          break;
+        case 3:
+            venda.update();
+          break;
+        case 4:   
+            venda.destroy();
+          break;
+  
+        case 0:
+          return;
+        default:
+          console.log("OPCAO INVALIDA");
+          break;
+      }
+    }
   }
   
 menuPrincipal();
